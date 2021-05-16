@@ -2,8 +2,10 @@ package core
 
 import "strings"
 
-type TargetsGetter func(symbol string) (rawTargets string)
-type CurrentPriceGetter func(symbol string) (price float64)
+type (
+	TargetsGetter      func(symbol string) (rawTargets string)
+	CurrentPriceGetter func(symbol string) (price float64)
+)
 
 type Factory struct {
 	targetsGetter      TargetsGetter

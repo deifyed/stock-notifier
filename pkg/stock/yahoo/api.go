@@ -3,11 +3,12 @@ package yahoo
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/deifyed/stock-notifier/pkg/stock"
 	"io"
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/deifyed/stock-notifier/pkg/stock"
 )
 
 func (c client) FetchCurrentPrice(tickers ...string) ([]stock.Data, error) {

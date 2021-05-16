@@ -2,15 +2,16 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"strings"
+
 	"github.com/deifyed/stock-notifier/pkg/config"
 	"github.com/deifyed/stock-notifier/pkg/core"
 	"github.com/deifyed/stock-notifier/pkg/notification"
 	"github.com/deifyed/stock-notifier/pkg/notification/gotify"
 	"github.com/deifyed/stock-notifier/pkg/stock"
 	"github.com/deifyed/stock-notifier/pkg/stock/yahoo"
-	"log"
-	"os"
-	"strings"
 )
 
 func main() {
@@ -58,7 +59,7 @@ func generateTargetsGetter() func(string) string {
 func generateCurrentPriceGetter(datas []stock.Data) func(string) float64 {
 	return func(symbol string) float64 {
 		for _, item := range datas {
-			if strings.ToUpper(item.Symbol) == strings.ToUpper(symbol) {
+			if strings.EqualFold(item.Symbol, symbol) {
 				return item.CurrentPrice
 			}
 		}
