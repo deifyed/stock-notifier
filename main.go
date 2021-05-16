@@ -16,6 +16,9 @@ import (
 
 func main() {
 	cfg := config.LoadConfig(os.Getenv)
+	if err := cfg.Validate(); err != nil {
+		log.Fatalln(err)
+	}
 
 	stockData, err := yahoo.NewYahooClient().FetchCurrentPrice(cfg.Symbols...)
 	if err != nil {
@@ -45,8 +48,8 @@ func main() {
 	}
 }
 
-func generateTargetsGetter(rawPriceTargets map[string]string) func(string) string {
-	return func(symbol string) string {
+func generateTargetsGetter(rawPriceTargets map[string][]string) func(string) []string {
+	return func(symbol string) []string {
 		return rawPriceTargets[strings.ToUpper(symbol)]
 	}
 }

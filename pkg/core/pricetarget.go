@@ -2,7 +2,6 @@ package core
 
 import (
 	"strconv"
-	"strings"
 )
 
 type PriceTarget struct {
@@ -21,22 +20,11 @@ func (t PriceTarget) Test(price float64) bool {
 	return false
 }
 
-func clean(s string) string {
-	s = strings.ReplaceAll(s, " ", "")
-	s = strings.ReplaceAll(s, "\n", "")
-
-	return s
-}
-
 // Expected format: "10+,5-, etc"
-func convertTargets(rawTargets string) []PriceTarget {
-	cleanedRawTargets := clean(rawTargets)
+func convertTargets(rawTargets []string) []PriceTarget {
+	targets := make([]PriceTarget, len(rawTargets))
 
-	parts := strings.Split(cleanedRawTargets, ",")
-
-	targets := make([]PriceTarget, len(parts))
-
-	for index, rawTarget := range parts {
+	for index, rawTarget := range rawTargets {
 		lastIndex := len(rawTarget) - 1
 
 		operator := rawTarget[lastIndex:]

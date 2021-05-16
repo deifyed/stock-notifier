@@ -2,49 +2,61 @@ package config
 
 import (
 	"fmt"
-	"log"
 	"net/url"
 	"strings"
 )
 
 func handleSymbols(getter StringGetter, key string) []string {
 	rawSymbols := getter(key)
-	if rawSymbols == "" {
-		log.Fatalln(fmt.Sprintf("getting required env variable %s", key))
-	}
 
-	rawSymbols = strings.ReplaceAll(rawSymbols, " ", "")
-	rawSymbols = strings.ReplaceAll(rawSymbols, "\n", "")
 	rawSymbols = strings.ToUpper(rawSymbols)
 
-	return strings.Split(rawSymbols, ",")
+	splitSymbols := strings.Split(rawSymbols, ",")
+
+	return cleanList(splitSymbols)
 }
 
 func handlePushServerURL(getter StringGetter, key string) url.URL {
 	rawURL := getter(key)
 	if rawURL == "" {
-		log.Fatalln(fmt.Sprintf("getting required env variable %s", key))
+		return url.URL{}
 	}
 
 	parsedURL, err := url.Parse(rawURL)
 	if err != nil {
-		log.Fatalln(fmt.Sprintf("parsing push server URL %s: %s", rawURL, err.Error()))
+		return url.URL{}
 	}
 
 	return *parsedURL
 }
 
-func handlePriceTargets(getter StringGetter, symbols []string) map[string]string {
-	priceTargets := map[string]string{}
+func handlePriceTargets(getter StringGetter, symbols []string) map[string][]string {
+	priceTargets := map[string][]string{}
 
 	for _, symbol := range symbols {
 		rawPriceTargets := getter(fmt.Sprintf("%s_%s", strings.ToUpper(symbol), "TARGETS"))
-		if rawPriceTargets == "" {
-			log.Fatalln(fmt.Sprintf("missing price targets for %s. Add with %s_TARGETS", symbol, symbol))
-		}
 
-		priceTargets[symbol] = strings.ToUpper(rawPriceTargets)
+		parts := strings.Split(rawPriceTargets, ",")
+
+		priceTargets[symbol] = cleanList(parts)
 	}
 
 	return priceTargets
+}
+
+func cleanList(l []string) []string {
+	if len(l) == 1 && l[0] == "" {
+		return []string{}
+	}
+
+	cleanedList := make([]string, len(l))
+
+	for index, item := range l {
+		cleanedItem := strings.ReplaceAll(item, " ", "")
+		cleanedItem = strings.ReplaceAll(cleanedItem, "\n", "")
+
+		cleanedList[index] = cleanedItem
+	}
+
+	return cleanedList
 }

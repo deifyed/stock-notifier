@@ -1,7 +1,7 @@
 package core
 
 type (
-	TargetsGetter      func(symbol string) (rawTargets string)
+	TargetsGetter      func(symbol string) (rawTargets []string)
 	CurrentPriceGetter func(symbol string) (price float64)
 )
 

@@ -9,5 +9,5 @@ type Config struct {
 
 	PushServerURL url.URL
 
-	PriceTargets map[string]string
+	PriceTargets map[string][]string
 }
