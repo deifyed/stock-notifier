@@ -1,3 +1,4 @@
+[![Build and deploy](https://github.com/deifyed/stock-notifier/actions/workflows/release.yml/badge.svg)](https://github.com/deifyed/stock-notifier/actions/workflows/release.yml)
 # stock-notifier
 Pushes stock price target notifications to Gotify
 
