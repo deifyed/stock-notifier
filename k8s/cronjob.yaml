@@ -1,0 +1,26 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+
+metadata:
+  name: stock-notifier
+
+spec:
+  jobTemplate:
+    metadata:
+      name: stock-notifier
+    spec:
+      template:
+        spec:
+          containers:
+          - image: ghcr.io/deifyed/stock-notifier:v0.0.0
+            name: stock-notifier
+            env:
+              - name: PUSH_SERVER_URL
+                value: https://push.domain.io/message?token=atoken
+              - name: SYMBOLS
+                value: ABC
+              - name: ABC_TARGETS
+                value: 100+
+          restartPolicy: OnFailure
+  # Every minute
+  schedule: '* * * * *'
