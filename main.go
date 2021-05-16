@@ -22,7 +22,7 @@ func main() {
 		log.Fatalln(fmt.Errorf("fetching quotes: %w", err))
 	}
 
-	targetsGetter := generateTargetsGetter()
+	targetsGetter := generateTargetsGetter(cfg.PriceTargets)
 	currentPriceGetter := generateCurrentPriceGetter(stockData)
 
 	stockFactory := core.NewFactory(targetsGetter, currentPriceGetter)
@@ -45,14 +45,9 @@ func main() {
 	}
 }
 
-func generateTargetsGetter() func(string) string {
+func generateTargetsGetter(rawPriceTargets map[string]string) func(string) string {
 	return func(symbol string) string {
-		key := fmt.Sprintf("%s_%s",
-			strings.ToUpper(symbol),
-			"TARGETS",
-		)
-
-		return os.Getenv(key)
+		return rawPriceTargets[strings.ToUpper(symbol)]
 	}
 }
 

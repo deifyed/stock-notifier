@@ -8,4 +8,6 @@ type Config struct {
 	Symbols []string
 
 	PushServerURL url.URL
+
+	PriceTargets map[string]string
 }

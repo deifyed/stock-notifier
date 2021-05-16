@@ -15,6 +15,7 @@ func handleSymbols(getter StringGetter, key string) []string {
 
 	rawSymbols = strings.ReplaceAll(rawSymbols, " ", "")
 	rawSymbols = strings.ReplaceAll(rawSymbols, "\n", "")
+	rawSymbols = strings.ToUpper(rawSymbols)
 
 	return strings.Split(rawSymbols, ",")
 }
@@ -31,4 +32,19 @@ func handlePushServerURL(getter StringGetter, key string) url.URL {
 	}
 
 	return *parsedURL
+}
+
+func handlePriceTargets(getter StringGetter, symbols []string) map[string]string {
+	priceTargets := map[string]string{}
+
+	for _, symbol := range symbols {
+		rawPriceTargets := getter(fmt.Sprintf("%s_%s", strings.ToUpper(symbol), "TARGETS"))
+		if rawPriceTargets == "" {
+			log.Fatalln(fmt.Sprintf("missing price targets for %s. Add with %s_TARGETS", symbol, symbol))
+		}
+
+		priceTargets[symbol] = strings.ToUpper(rawPriceTargets)
+	}
+
+	return priceTargets
 }
